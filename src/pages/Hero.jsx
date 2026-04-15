@@ -6,6 +6,9 @@ import delicious_pic from '../assets/delicious_pic.svg';
 import quality_pic from '../assets/quality_pic.svg';
 import fastest_pic from '../assets/fastest_pic.svg';
 import hero_side_pic from '../assets/hero_side_pic.svg';
+import one_icon from '../assets/one_icon.svg';
+import two_icon from '../assets/two_icon.svg';
+import three_icon from '../assets/three_icon.svg';
 
 const Hero = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -114,6 +117,37 @@ const Hero = () => {
           ))}
         </div>
       </section>
+
+      {/* Section 4 — How Gorefresh works */}
+    <section className="bg-white py-16 px-6 md:px-12 text-center font-geist">
+        <div className="bg-[#D8E7D8] p-15 rounded-lg" >
+  <p className="text-[#0C850C] font-bold text-3xl sm:text-4xl md:text-5xl mb-10">
+    How Gorefresh works
+  </p>
+  
+  <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-5xl mx-auto">
+    {[
+      { img: one_icon, title: 'Choose Your Products' },
+      { img: two_icon, title: 'Place Your Order' },
+      { img: three_icon, title: 'Fastest Delivery' },
+    ].map(({ img, title }, index, array) => (
+    <div
+  key={title}
+  className={`
+    flex flex-col items-center justify-center text-center
+    p-6 relative
+    ${index < array.length - 1 ? 'sm:after:absolute sm:after:right-[-16px] sm:after:top-0 sm:after:h-full sm:after:w-[2px] sm:after:bg-[#F7641C]' : ''}
+  `}
+>
+        <img className="w-16 h-16 object-contain mb-4" src={img} alt={title} />
+        <p className="text-[#095E08] font-medium text-lg">{title}</p>
+      </div>
+    ))}
+  </div>
+  </div>
+</section>
+
+      
     </>
   );
 };
