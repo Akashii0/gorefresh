@@ -136,7 +136,10 @@ const Hero = () => {
   className={`
     flex flex-col items-center justify-center text-center
     p-6 relative
-    ${index < array.length - 1 ? 'sm:after:absolute sm:after:right-[-16px] sm:after:top-0 sm:after:h-full sm:after:w-[2px] sm:after:bg-[#F7641C]' : ''}
+    ${index < array.length - 1 
+      ? 'border-b border-[#F7641C] pb-6 mb-6 sm:border-b-0 sm:pb-0 sm:mb-0 sm:after:absolute sm:after:right-[-16px] sm:after:top-0 sm:after:h-full sm:after:w-[2px] sm:after:bg-[#F7641C]' 
+      : ''
+    }
   `}
 >
         <img className="w-16 h-16 object-contain mb-4" src={img} alt={title} />
