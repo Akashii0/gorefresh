@@ -9,6 +9,7 @@ import Marketplace from '../sections/Marketplace';
 import Pure from '../sections/Pure';
 import Whychooseus from '../sections/Whychooseus';
 import CustomerReviews from '../sections/CustomerReviews';
+import PapNutrients from '../sections/PapNutrients';
 
 
 /* ── Star Rating ─────────────────────────────────────────── */
@@ -101,11 +102,7 @@ const Hero = () => {
      <CustomerReviews />
         
     {/* Section 7 — Pap nutrients */}
-    <section className='flex flex-col bg-white items-center text-center justify-center p-5'>
-        <p className='items-center text-center justify-center p-6 text-[#000000] max-w-3xl'>Introducing our pap, packed with 4 essential vitamins and minerals, specially formulated to support your physical and mental growth and development.</p>
-        
-    
-    </section>
+   <PapNutrients/>
 
     </>
   );
