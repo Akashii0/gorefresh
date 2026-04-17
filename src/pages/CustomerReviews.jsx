@@ -1,118 +1,86 @@
-// CustomerReviews.jsx
 import React, { useRef, useState, useEffect } from 'react';
-import { reviews } from '../data/reviewData'; // adjust path
+import { reviews } from '../data/reviewData';
 
-const StarRating = ({ stars }) => {
-  const fullStars = Math.floor(stars);
-  const emptyStars = 5 - fullStars;
-
-  return (
-    <div className="flex items-center gap-0.5">
-      {[...Array(fullStars)].map((_, i) => (
-        <svg key={i} className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
-          <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-        </svg>
-      ))}
-      {[...Array(emptyStars)].map((_, i) => (
-        <svg key={i + fullStars} className="w-5 h-5 text-gray-300 fill-current" viewBox="0 0 20 20">
-          <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-        </svg>
-      ))}
-    </div>
-  );
-};
+const StarRating = ({ stars }) => (
+  <div className="flex gap-0.5">
+    {Array.from({ length: 5 }, (_, i) => (
+      <svg key={i} className={`w-4 h-4 ${i < stars ? 'text-[#F76319]' : 'text-gray-300'} fill-current`} viewBox="0 0 20 20">
+        <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+      </svg>
+    ))}
+  </div>
+);
 
 const CustomerReviews = () => {
-  const scrollContainerRef = useRef(null);
+  const scrollRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
 
-  const checkScrollButtons = () => {
-    if (!scrollContainerRef.current) return;
-    const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+  const checkScroll = () => {
+    if (!scrollRef.current) return;
+    const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
     setCanScrollLeft(scrollLeft > 0);
     setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 5);
   };
 
   useEffect(() => {
-    const container = scrollContainerRef.current;
+    const container = scrollRef.current;
     if (!container) return;
-
-    checkScrollButtons();
-    container.addEventListener('scroll', checkScrollButtons);
-    window.addEventListener('resize', checkScrollButtons);
-
+    checkScroll();
+    container.addEventListener('scroll', checkScroll);
+    window.addEventListener('resize', checkScroll);
     return () => {
-      container.removeEventListener('scroll', checkScrollButtons);
-      window.removeEventListener('resize', checkScrollButtons);
+      container.removeEventListener('scroll', checkScroll);
+      window.removeEventListener('resize', checkScroll);
     };
   }, []);
 
   const scroll = (direction) => {
-    if (!scrollContainerRef.current) return;
-    const container = scrollContainerRef.current;
-    const firstCard = container.querySelector('.review-card');
-    if (!firstCard) return;
-
-    const cardWidth = firstCard.clientWidth;
-    const gap = 16; // gap-4 = 1rem
-    const scrollAmount = cardWidth + gap;
-
-    const newScrollLeft =
-      direction === 'left'
-        ? container.scrollLeft - scrollAmount
-        : container.scrollLeft + scrollAmount;
-
-    container.scrollTo({ left: newScrollLeft, behavior: 'smooth' });
+    const card = scrollRef.current?.querySelector('.review-card');
+    const amount = (card?.clientWidth ?? 200) + 8;
+    scrollRef.current?.scrollBy({ left: direction === 'left' ? -amount : amount, behavior: 'smooth' });
   };
+
+  const Arrow = ({ direction, enabled }) => (
+    <button
+      onClick={() => scroll(direction)}
+      disabled={!enabled}
+      aria-label={`Scroll ${direction}`}
+      className={`absolute top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-white shadow-lg flex items-center justify-center transition-all duration-200
+        ${direction === 'left' ? '-left-4' : '-right-4'}
+        ${enabled ? 'hover:bg-[#0C850C] hover:text-white cursor-pointer' : 'opacity-40 cursor-not-allowed'}`}
+    >
+      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={direction === 'left' ? 'M15 19l-7-7 7-7' : 'M9 5l7 7-7 7'} />
+      </svg>
+    </button>
+  );
 
   return (
     <section className="bg-[#EBF3EB] py-16 px-6 md:px-12 font-geist">
-      {/* Centered Title */}
       <p className="text-[#0C850C] font-bold text-3xl sm:text-4xl md:text-5xl text-center mb-10">
         Customer Reviews
       </p>
 
-      {/* Carousel Container with Arrows Overlay */}
       <div className="relative max-w-6xl mx-auto">
-        {/* Left Arrow */}
-        <button
-          onClick={() => scroll('left')}
-          disabled={!canScrollLeft}
-          className={`absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white shadow-lg flex items-center justify-center transition-all duration-200 ${
-            canScrollLeft
-              ? 'hover:bg-[#0C850C] hover:text-white hover:scale-105 cursor-pointer'
-              : 'opacity-40 cursor-not-allowed'
-          }`}
-          aria-label="Scroll left"
-          style={{ transform: 'translateY(-50%)', left: '-1rem' }}
-        >
-          <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
+        <Arrow direction="left"  enabled={canScrollLeft}  />
+        <Arrow direction="right" enabled={canScrollRight} />
 
-        {/* Scrollable Container (no visible scrollbar) */}
         <div
-          ref={scrollContainerRef}
-          className="flex gap-4 overflow-x-auto pb-6 scroll-smooth hide-scrollbar"
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          ref={scrollRef}
+          className="flex gap-5 overflow-x-auto pb-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {reviews.map((reviewer) => (
             <div
               key={reviewer.id}
-              className="review-card relative flex-shrink-0 w-64 md:w-72 h-96 rounded-2xl overflow-hidden transition-all duration-300 ease-out hover:scale-105 hover:shadow-2xl hover:z-10 cursor-pointer"
+              className="review-card relative flex-shrink-0 w-44 md:w-52 h-64 md:h-72 rounded-2xl overflow-hidden cursor-pointer
+                transition-all duration-300 ease-out hover:scale-105 hover:shadow-2xl hover:z-10"
             >
-              <img
-                src={reviewer.imageUrl}
-                alt={`${reviewer.name}'s review`}
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-              <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+              <img src={reviewer.imageUrl} alt={reviewer.name} className="w-full h-full object-cover" loading="lazy" />
+              <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
                 <StarRating stars={reviewer.stars} />
-                <p className="text-white text-sm mt-2 line-clamp-3">"{reviewer.review}"</p>
-                <p className="text-white text-sm font-semibold mt-2">— {reviewer.name}</p>
+                <p className="text-white text-xs mt-1 line-clamp-3">"{reviewer.review}"</p>
+                <p className="text-white text-xs font-semibold mt-1">— {reviewer.name}</p>
                 {reviewer.location && (
                   <p className="text-white/70 text-xs mt-1 flex items-center gap-1">
                     <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
@@ -125,31 +93,7 @@ const CustomerReviews = () => {
             </div>
           ))}
         </div>
-
-        {/* Right Arrow */}
-        <button
-          onClick={() => scroll('right')}
-          disabled={!canScrollRight}
-          className={`absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 md:w-12 md:h-12 rounded-full bg-white shadow-lg flex items-center justify-center transition-all duration-200 ${
-            canScrollRight
-              ? 'hover:bg-[#0C850C] hover:text-white hover:scale-105 cursor-pointer'
-              : 'opacity-40 cursor-not-allowed'
-          }`}
-          aria-label="Scroll right"
-          style={{ transform: 'translateY(-50%)', right: '-1rem' }}
-        >
-          <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
       </div>
-
-      {/* Hide scrollbar styles */}
-      <style jsx>{`
-        .hide-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
     </section>
   );
 };
