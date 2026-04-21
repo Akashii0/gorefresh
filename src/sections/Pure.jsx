@@ -8,13 +8,13 @@ const Pure = () => {
 
       {/* Mobile background — hidden on md+ */}
       <div
-        className="absolute inset-0 md:hidden bg-no-repeat bg-center bg-[length:120%]"
+        className="absolute inset-0 md:hidden bg-no-repeat bg-center bg-[length:130%]"
         style={{ backgroundImage: `url(${second_background_mobile})` }}
       />
 
       {/* Desktop background — hidden below md */}
       <div
-        className="absolute inset-0 hidden md:block bg-no-repeat bg-center bg-[length:110%]"
+        className="absolute inset-0 hidden md:block bg-no-repeat bg-center bg-[length:100%]"
         style={{ backgroundImage: `url(${second_background})` }}
       />
 
