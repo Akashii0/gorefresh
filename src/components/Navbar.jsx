@@ -26,7 +26,7 @@ const Navbar = ({ logo }) => {
 
         <div className="hidden md:flex gap-3 lg:gap-10">
           <Link to="/signup"  className="btn-green">Sign Up</Link>
-          <Link to="/shop"    className="btn-orange">Shop Now</Link>
+          <a href="#marketplace" className="btn-orange">Shop Now</a>
         </div>
 
         {/* Hamburger */}
@@ -51,7 +51,7 @@ const Navbar = ({ logo }) => {
           ))}
           <div className="flex gap-3 pt-2">
             <Link to="/signup" className="btn-green">Sign Up</Link>
-            <Link to="/shop"   className="btn-orange">Shop Now</Link>
+            <a href="#marketplace" className="btn-orange">Shop Now</a>
           </div>
         </div>
       )}

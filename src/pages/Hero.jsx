@@ -41,7 +41,7 @@ const Hero = () => {
             </div>
             <div className="flex gap-4">
               <a className="btn-green" href="">Contact us</a>
-              <a className="btn-orange" href="">Shop Now</a>
+             <a href="#marketplace" className="btn-orange">Shop Now</a>
             </div>
           </div>
           <div>

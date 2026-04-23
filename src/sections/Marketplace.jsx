@@ -37,7 +37,7 @@ const ProductCard = ({ image, label, stars, price }) => (
 );
 const Marketplace = () => {
   return (
-     <section className="bg-white py-16 px-6 md:px-12 font-geist">
+     <section id="marketplace" className="bg-white py-16 px-6 md:px-12 font-geist">
         <p className="text-[#0C850C] font-bold text-3xl sm:text-4xl md:text-5xl text-center mb-10">
           MarketPlace
         </p>
