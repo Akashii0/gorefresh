@@ -15,10 +15,9 @@ const Footer = () => {
       <div className="flex flex-col gap-5">
         <img className="w-40 md:w-50" src={gorefresh_footer} alt="Gorefresh Footer" />
         <p className="font-thin text-sm md:text-base leading-relaxed">
-          Pap, commonly known as akamu or ogi in many parts of Nigeria and West Africa, is a smooth,
-          fermented cereal pudding made from maize, sorghum, or millet. It is one of the oldest and
-          most widely consumed traditional foods across several African cultures. Its simplicity,
-          affordability, and nutritional value make it a staple in many homes.
+          Gorefresh foods is a fresh food industry that converts most Nigerian staple foods into their best and most convenient form, without tampering with their composition. 
+
+All food products are organically processed, making them ideal for all age groups.
         </p>
       </div>
 
