@@ -1,17 +1,43 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import background from '../assets/background.svg';
 import logo from '../assets/logo.png';
+import api from '../api/axios';
 
 const Login = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailLocked, setEmailLocked] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({ email, password });
+    
+    try{
+      const response = await api.post("/users/login", { email, password });
+
+const token = response.data.data.tokens.access_token;
+const refresh = response.data.data.tokens.refresh_token;
+
+console.log("token:", token); // confirm it prints
+
+localStorage.setItem('token', token);
+localStorage.setItem('refresh_token', refresh);
+
+console.log("saved:", localStorage.getItem('token')); // confirm it saved
+
+alert("Login successful!");
+window.location.href = "/";
+    } catch (error) {
+      console.log(error);
+
+      if (error.response) {
+        alert(error.response.data.detail || "Login Failed.");
+      } else {
+        alert("Something went wrong");
+      }
+    }
   };
 
   return (

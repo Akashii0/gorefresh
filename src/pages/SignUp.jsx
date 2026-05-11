@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import background from '../assets/background.svg';
 import logo from '../assets/logo.png';
+import api from '../api/axios';
 
 const SignUp = () => {
   const [form, setForm] = useState({ firstName: '', lastName: '', email: '', password: '' });
@@ -11,10 +12,32 @@ const SignUp = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(form);
+
+    try{
+      const response = await api.post("/users", {
+        first_name: form.firstName,
+        last_name: form.lastName,
+        email: form.email,
+        password: form.password
+      });
+
+      console.log(response.data);
+
+      alert("Account created successfully! Please login.");
+    } catch (error) {
+      console.log(error);
+
+      if (error.response) {
+        alert(error.response.data.detail || "Signup Failed.");
+
+      }else {
+        alert("Something went wrong");
+      }
+    
   };
+}
 
   return (
     <section
@@ -122,6 +145,7 @@ const SignUp = () => {
       </div>
     </section>
   );
-};
+}
+
 
 export default SignUp;

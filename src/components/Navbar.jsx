@@ -1,14 +1,44 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import api from "../api/axios";
 
 const Navbar = ({ logo }) => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
   const navLinks = [
     { label: "Home",                 to: "/"          },
     { label: "About Us",             to: "/about"     },
     { label: "Customer's Dashboard", to: "/dashboard" },
   ];
+
+  // Fetch user on mount if token exists
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    console.log("Navbar mounted, token:", token); 
+    if (!token) return;
+
+    const fetchUser = async () => {
+      try {
+        const response = await api.get("/users/me");
+        console.log("users/me response:", response.data); 
+        setUser(response.data.data);
+      } catch(error) {
+        console.log("users/me error:", error);
+        setUser(null);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('refresh_token');
+    setUser(null);
+    navigate("/");
+  };
 
   return (
     <>
@@ -24,9 +54,21 @@ const Navbar = ({ logo }) => {
           ))}
         </div>
 
-        <div className="hidden md:flex gap-3 lg:gap-10">
-          <Link to="/signup"  className="btn-green">Sign Up</Link>
-          <a href="#marketplace" className="btn-orange">Shop Now</a>
+        {/* Desktop Right Side — changes based on login state */}
+        <div className="hidden md:flex items-center gap-3 lg:gap-6">
+          {user ? (
+            <>
+              <span className="text-sm text-gray-600">
+                Hi, <span className="font-semibold text-[#0C850C]">{user.first_name}</span>
+              </span>
+              <button onClick={handleLogout} className="btn-green">Log Out</button>
+            </>
+          ) : (
+            <>
+              <Link to="/signup"      className="btn-green">Sign Up</Link>
+              <a href="#marketplace"  className="btn-orange">Shop Now</a>
+            </>
+          )}
         </div>
 
         {/* Hamburger */}
@@ -49,9 +91,20 @@ const Navbar = ({ logo }) => {
               {label}
             </Link>
           ))}
-          <div className="flex gap-3 pt-2">
-            <Link to="/signup" className="btn-green">Sign Up</Link>
-            <a href="#marketplace" className="btn-orange">Shop Now</a>
+          <div className="flex flex-col gap-3 pt-2">
+            {user ? (
+              <>
+                <span className="text-sm text-gray-600">
+                  Hi, <span className="font-semibold text-[#0C850C]">{user.first_name}</span>
+                </span>
+                <button onClick={handleLogout} className="btn-green w-fit">Log Out</button>
+              </>
+            ) : (
+              <div className="flex gap-3">
+                <Link to="/signup"     className="btn-green" onClick={() => setMenuOpen(false)}>Sign Up</Link>
+                <a href="#marketplace" className="btn-orange" onClick={() => setMenuOpen(false)}>Shop Now</a>
+              </div>
+            )}
           </div>
         </div>
       )}
